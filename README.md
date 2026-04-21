@@ -52,6 +52,21 @@ nclouds-infrastructure/
 - WAF integration
 - Cross-region replication for DR
 
+## Environments
+
+### Production VPS (Current)
+- IP: 40.90.168.38
+- app.eventxgames.com
+- app-api.eventxgames.com
+
+### Staging VPS - dev-v26 (NEW)
+- IP: 172.188.98.210
+- dev-app-v26.eventxgames.com
+- dev-api-v26.eventxgames.com
+- dev-ws-v26.eventxgames.com
+
+---
+
 ## Quick Start
 
 ```bash
