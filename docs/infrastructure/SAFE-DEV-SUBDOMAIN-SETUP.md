@@ -1,6 +1,6 @@
 # Safe Dev-V26 Subdomain Setup Guide
 
-**Date:** 2026-04-16  
+**Date:** 2026-04-21 (Updated)  
 **Risk Level:** Low (with proper backups)  
 **Rollback Time:** < 5 minutes  
 
@@ -8,14 +8,20 @@
 
 ## Current State Analysis
 
-### VPS: 40.90.168.38
+### Production VPS: 40.90.168.38
 
 | Domain | Status | Purpose |
 |--------|--------|---------|
-| staging.eventxgames.com | Active | Staging frontend |
-| staging-api.eventxgames.com | Active | Staging API |
 | app.eventxgames.com | Production | Production frontend |
 | app-api.eventxgames.com | Production | Production API |
+
+### Staging VPS (NEW): 172.188.98.210
+
+| Domain | Status | Purpose |
+|--------|--------|---------|
+| dev-app-v26.eventxgames.com | DNS Ready | Dev frontend |
+| dev-api-v26.eventxgames.com | DNS Ready | Dev API |
+| dev-ws-v26.eventxgames.com | DNS Ready | Dev WebSocket |
 
 ### What We Want to Add
 
@@ -33,7 +39,7 @@ Before making ANY changes, create backups:
 
 ```bash
 # SSH to VPS
-ssh root@40.90.168.38
+ssh root@172.188.98.210
 
 # Create timestamped backups
 BACKUP_DATE=$(date +%Y%m%d_%H%M%S)
@@ -66,11 +72,13 @@ ls -la /root/src/*.backup.*
 
    | Name | Type | TTL | Value |
    |------|------|-----|-------|
-   | dev-app-v26 | A | 300 | 40.90.168.38 |
-   | dev-api-v26 | A | 300 | 40.90.168.38 |
-   | dev-ws-v26 | A | 300 | 40.90.168.38 |
+   | dev-app-v26 | A | 300 | 172.188.98.210 |
+   | dev-api-v26 | A | 300 | 172.188.98.210 |
+   | dev-ws-v26 | A | 300 | 172.188.98.210 |
 
    **TTL 300** = 5 minutes (for quick propagation during testing)
+
+   > **Note:** DNS is already configured and resolving correctly.
 
 4. **Verify DNS Propagation**
 
@@ -80,7 +88,7 @@ ls -la /root/src/*.backup.*
    nslookup dev-api-v26.eventxgames.com
    ```
 
-   Should return: 40.90.168.38
+   Should return: 172.188.98.210
 
 ---
 
@@ -90,7 +98,7 @@ ls -la /root/src/*.backup.*
 
 ```bash
 # SSH to VPS
-ssh root@40.90.168.38
+ssh root@172.188.98.210
 
 # Go to project directory
 cd /root/src
@@ -165,7 +173,7 @@ dev-ws-v26.eventxgames.com {
 
 ```bash
 # SSH to VPS
-ssh root@40.90.168.38
+ssh root@172.188.98.210
 
 # Check current CORS setting
 grep ALLOWED_ORIGINS /root/src/.env
@@ -186,7 +194,7 @@ nano /root/src/.env
 
 ```bash
 # SSH to VPS
-ssh root@40.90.168.38
+ssh root@172.188.98.210
 
 # Validate Caddyfile syntax (inside container)
 docker exec eventxgames-caddy caddy validate --config /etc/caddy/Caddyfile
@@ -201,7 +209,7 @@ docker exec eventxgames-caddy caddy validate --config /etc/caddy/Caddyfile
 
 ```bash
 # SSH to VPS
-ssh root@40.90.168.38
+ssh root@172.188.98.210
 cd /root/src
 
 # Restart Caddy ONLY first
@@ -241,7 +249,7 @@ curl -I https://dev-api-v26.eventxgames.com/health
 
 ```bash
 # SSH to VPS
-ssh root@40.90.168.38
+ssh root@172.188.98.210
 cd /root/src
 
 # Find the most recent backup
@@ -282,9 +290,9 @@ If you want to remove just the dev config without full rollback:
 
 ### DNS Setup (Azure Portal)
 
-- [ ] Added A record: dev-app-v26 -> 40.90.168.38
-- [ ] Added A record: dev-api-v26 -> 40.90.168.38
-- [ ] Added A record: dev-ws-v26 -> 40.90.168.38
+- [x] Added A record: dev-app-v26 -> 172.188.98.210
+- [x] Added A record: dev-api-v26 -> 172.188.98.210
+- [x] Added A record: dev-ws-v26 -> 172.188.98.210
 - [ ] Verified DNS propagation (nslookup)
 
 ### Server Configuration
@@ -333,5 +341,6 @@ If you want to remove just the dev config without full rollback:
 
 ---
 
-*Document created: 2026-04-16*
+*Document created: 2026-04-16*  
+*Updated: 2026-04-21 - Corrected IP to new staging VPS (172.188.98.210)*  
 *Safe to share with CTO and engineering team*
