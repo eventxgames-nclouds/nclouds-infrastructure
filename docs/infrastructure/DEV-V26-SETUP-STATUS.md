@@ -1,7 +1,7 @@
 # Dev-V26 Subdomain Setup Status
 
-**Date:** 2026-04-16  
-**Status:** PREPARED (Waiting for DNS)
+**Date:** 2026-04-21 (Updated)  
+**Status:** DNS CONFIGURED - Server Setup Pending
 
 ---
 
@@ -51,9 +51,11 @@ Add these A records in Azure DNS Zone (eventxgames.com):
 
 | Name | Type | TTL | Value |
 |------|------|-----|-------|
-| dev-app-v26 | A | 300 | 40.90.168.38 |
-| dev-api-v26 | A | 300 | 40.90.168.38 |
-| dev-ws-v26 | A | 300 | 40.90.168.38 |
+| dev-app-v26 | A | 300 | 172.188.98.210 |
+| dev-api-v26 | A | 300 | 172.188.98.210 |
+| dev-ws-v26 | A | 300 | 172.188.98.210 |
+
+> **Note:** DNS is now configured and resolving correctly to 172.188.98.210
 
 **Instructions:**
 1. Go to Azure Portal → DNS Zones → eventxgames.com
@@ -68,8 +70,8 @@ Add these A records in Azure DNS Zone (eventxgames.com):
 Run these commands to activate:
 
 ```bash
-# SSH to VPS
-ssh root@40.90.168.38
+# SSH to Staging VPS
+ssh root@172.188.98.210
 
 # Restart Caddy to pick up new domains
 docker compose -f /root/src/docker-compose.yml restart caddy
@@ -104,4 +106,5 @@ docker compose restart caddy backend
 ---
 
 *Prepared by: Paperclip AI DevOps Agent*  
-*Date: 2026-04-16*
+*Date: 2026-04-16*  
+*Updated: 2026-04-21 - Corrected IP to new staging VPS (172.188.98.210)*
